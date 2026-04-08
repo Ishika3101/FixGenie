@@ -6,6 +6,7 @@ import authRouter from "./routes/authRoutes.js";
 import providerRouter from "./routes/providerRoutes.js"
 import bookingRouter from "./routes/bookingRoutes.js"
 import reviewRouter from "./routes/reviewRoutes.js"
+import adminRouter from "./routes/adminRoutes.js"
 
 dotenv.config();
 
@@ -18,6 +19,7 @@ app.use("/api/auth",authRouter);//any request that starts with /api/auth — sen
 app.use("/api/providers", providerRouter);
 app.use("/api/bookings",bookingRouter);
 app.use("/api/reviews",reviewRouter);
+app.use("/api/admin",adminRouter);
 
 app.get('/', (req, res) => {
   res.json({ message: 'FixGenie API is running 🧞' }) //res.json sends a JSON response(string) toclient, express converts js obj to json string behind the scenes
