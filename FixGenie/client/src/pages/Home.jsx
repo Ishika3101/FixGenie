@@ -1,4 +1,6 @@
-const services = [
+import {useNavigate} from 'react-router-dom'
+
+const services=[
   { name: "Plumbing", icon: "/Plumbing.png", desc: "Pipes, leaks & installations" },
   { name: "Electrical", icon: "/Electrical.png", desc: "Wiring, fitting & repairs" },
   { name: "Cleaning", icon: "/Cleaning.png", desc: "Deep clean & sanitization" },
@@ -8,6 +10,7 @@ const services = [
 ]
 
 const Home = () => {
+  const navigate=useNavigate()
   return (
     <div>
 
@@ -19,7 +22,7 @@ const Home = () => {
         <p className="text-purple-300 text-xl mb-8 max-w-2xl">
           Book verified professionals for plumbing, electrical, cleaning and more — at your doorstep!
         </p>
-        <button className="bg-yellow-400 text-purple-950 font-bold px-8 py-3 rounded-full hover:bg-yellow-300 transition duration-300 text-lg">
+        <button onClick={() => navigate('/providers')} className="bg-yellow-400 text-purple-950 font-bold px-8 py-3 rounded-full hover:bg-yellow-300 transition duration-300 text-lg">
           Book a Service
         </button>
       </div>
