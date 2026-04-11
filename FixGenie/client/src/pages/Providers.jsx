@@ -99,7 +99,7 @@ const Providers = () => {
                                   if bio is empty, show nothing */}
 
                             <button
-                                onClick={() => navigate(`/bookings/${provider._id}`)}
+                                onClick={() => navigate(`/book/${provider._id}`)}
                                 className="w-full bg-purple-950 text-white font-bold py-2 rounded-xl hover:bg-purple-800 transition duration-300"
                             >
                                 Book Now
