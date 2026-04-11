@@ -6,6 +6,7 @@ import Navbar from "./components/Navbar.jsx"
 import ProtectedRoute from "./components/ProtectedRoute.jsx"
 import Dashboard from "./pages/Dashboard.jsx"
 import Providers from "./pages/Providers.jsx"
+import BookingForm from "./pages/BookingForm.jsx"
 
 function App() {
   return (
@@ -22,6 +23,11 @@ function App() {
           </ProtectedRoute>
         } />  
         <Route path="/providers" element={<Providers />}></Route>
+        <Route path="/book/:providerId" element={
+          <ProtectedRoute>
+              <BookingForm />
+          </ProtectedRoute>
+        } />
       </Routes>
     </div>
   )
