@@ -22,6 +22,11 @@ const Navbar = () => {
                 <Link to="/register" className='text-white hover:text-yellow-400 transition duration-300 text-lg font-medium'>Register</Link>
             </>
         )}
+        {user && (
+        <Link to="/profile" className="text-white hover:text-yellow-400 transition duration-300 text-lg font-medium">
+          Profile
+        </Link>
+        )}
       </div>
     </div>
   )

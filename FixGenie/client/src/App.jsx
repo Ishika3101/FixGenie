@@ -7,6 +7,7 @@ import ProtectedRoute from "./components/ProtectedRoute.jsx"
 import Dashboard from "./pages/Dashboard.jsx"
 import Providers from "./pages/Providers.jsx"
 import BookingForm from "./pages/BookingForm.jsx"
+import Profile from "./pages/Profile.jsx"
 
 function App() {
   return (
@@ -27,6 +28,11 @@ function App() {
           <ProtectedRoute>
               <BookingForm />
           </ProtectedRoute>
+        } />
+        <Route path="/profile" element={
+        <ProtectedRoute>
+          <Profile />
+        </ProtectedRoute>
         } />
       </Routes>
     </div>

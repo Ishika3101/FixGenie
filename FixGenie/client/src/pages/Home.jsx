@@ -47,7 +47,7 @@ const Home = () => {
                     <h2 className="text-3xl font-bold text-purple-950 mb-4">Ready to start earning?</h2>
                     <p className="text-gray-500 mb-8">Complete your profile to start receiving bookings</p>
                     <button
-                        onClick={() => navigate('/dashboard')}
+                        onClick={() => navigate('/profile')}
                         className="bg-purple-950 text-white font-bold px-8 py-3 rounded-full hover:bg-purple-800 transition duration-300"
                     >
                         Complete Profile
