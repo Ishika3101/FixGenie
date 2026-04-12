@@ -71,11 +71,11 @@ const CustomerDashboard = () => {
             <div key={booking._id} className="flex items-center justify-between p-4 border border-gray-100 rounded-xl mb-4 hover:shadow-sm transition">
                 <div>
                     <p className="font-bold text-purple-950">{booking.category}</p>
-                    <p className="text-gray-500 text-sm">📍 {booking.address}</p>
-                    <p className="text-gray-500 text-sm">📅 {new Date(booking.date).toLocaleDateString()}</p>
+                    <p className="text-gray-500 text-sm">{booking.address}</p>
+                    <p className="text-gray-500 text-sm">{new Date(booking.date).toLocaleDateString()}</p>
                     {/*new Date() converts it to a Date object
                     .toLocaleDateString() converts to readable format*/}
-                    <p className="text-gray-500 text-sm">🔧 Provider: {booking.providerId?.name}</p>
+                    <p className="text-gray-500 text-sm">Provider: {booking.providerId?.name}</p>
                     {/*in bookingController we used .populate()?
                     populate("providerId", "name email phone city")
                     This replaces the ID with actual provider object!
