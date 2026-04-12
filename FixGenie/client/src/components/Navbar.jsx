@@ -12,8 +12,9 @@ const Navbar = () => {
         {user ? (
             //logged in
             <>
-                <span className='text-yellow-400 font-medium'>Hi, {user.name}!</span>
-                <button onClick={logout} className='text-white hover:text-yellow-400 transition duration-300 text-lg font-medium'>Logout</button>
+              <Link to="/profile" className='text-white hover:text-yellow-400 transition duration-300 text-lg font-medium'>Profile</Link>
+              <Link to="/dashboard" className='text-white hover:text-yellow-400 transition duration-300 text-lg font-medium'>Dashboard</Link>
+              <button onClick={logout} className='text-white hover:text-yellow-400 transition duration-300 text-lg font-medium'>Logout</button>
             </>
         ): (
             //not logged in
@@ -21,11 +22,6 @@ const Navbar = () => {
                 <Link to="/login" className='text-white hover:text-yellow-400 transition duration-300 text-lg font-medium'>Login</Link>
                 <Link to="/register" className='text-white hover:text-yellow-400 transition duration-300 text-lg font-medium'>Register</Link>
             </>
-        )}
-        {user && (
-        <Link to="/profile" className="text-white hover:text-yellow-400 transition duration-300 text-lg font-medium">
-          Profile
-        </Link>
         )}
       </div>
     </div>

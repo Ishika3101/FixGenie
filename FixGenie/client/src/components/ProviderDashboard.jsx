@@ -19,6 +19,19 @@ const ProviderDashboard = () => {
         fetchBookings()
     }, [])
 
+    async function handleStatus(bookingId,status){
+        const token=localStorage.getItem("token")
+        await axios.patch(`http://localhost:5000/api/bookings/${bookingId}`,{
+            status //send new status in body
+        },{
+            headers:{
+                Authorization:`Bearer ${token}`
+            }
+        })
+        setBookings(bookings.map(b=>b._id===bookingId?{...b,status}:b)) //loop through booking then check if its the one we just updated if yes spread all existing fields but override status with new one 
+        //Why we used map function here ===>directly update the ONE booking in state,No extra API call! and Instant UI update! 
+    }
+
     return (
         <div className="min-h-screen bg-gray-50 px-10 py-10">
 
@@ -73,6 +86,16 @@ const ProviderDashboard = () => {
                             `}>
                                 {booking.status}
                             </div>
+                            {/*only show buttons of accept and reject if booking is pending*/}
+                            {booking.status==='pending' &&(
+                                <div className='flex gap-2 mt-2'>
+                                    <button onClick={()=>handleStatus(booking._id,"accepted")}>Accept</button>
+                                    <button onClick={() => handleStatus(booking._id, "rejected")}>
+                                        Reject
+                                    </button>
+                                    {/*we use arrow fun because===> () => creates a new function that waits to be called and if we dont use arrow function that fun calls immediately on render*/}
+                                </div>
+                            )}
                         </div>
                     ))
                 )}
@@ -83,3 +106,37 @@ const ProviderDashboard = () => {
 }
 
 export default ProviderDashboard
+
+
+
+//accepted-rejected id full flow
+//MongoDB creates booking with _id: "abc123"
+//         ↓
+// Backend sends to frontend via res.json()
+//         ↓
+// Frontend stores in bookings state
+//         ↓
+// .map() loops → each booking has ._id
+//         ↓
+// Button onClick passes booking._id to handleStatus
+//         ↓
+// handleStatus sends to backend via axios.patch URL
+//         ↓
+// Backend reads from req.params.id
+//         ↓
+// MongoDB finds that exact document
+//         ↓
+// Updates status!
+
+//Are booking._id and bookingId the same?
+// YES! Just different variable names at different stages:
+
+//booking._id   // in the .map() — property of booking object
+     //↓
+// passed as argument to handleStatus:
+//handleStatus(booking._id, "accepted")
+// received as parameter:
+//async function handleStatus(bookingId, status)
+//                          ↑
+//                   bookingId = "abc123"
+//                   same value, different name!
