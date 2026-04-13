@@ -20,6 +20,8 @@ const ProviderDashboard = () => {
     }, [])
 
     async function handleStatus(bookingId,status){
+        console.log("bookingId:", bookingId)
+        console.log("status:", status)
         const token=localStorage.getItem("token")
         await axios.patch(`http://localhost:5000/api/bookings/${bookingId}`,{
             status //send new status in body
@@ -89,8 +91,8 @@ const ProviderDashboard = () => {
                             {/*only show buttons of accept and reject if booking is pending*/}
                             {booking.status==='pending' &&(
                                 <div className='flex gap-2 mt-2'>
-                                    <button onClick={()=>handleStatus(booking._id,"accepted")}>Accept</button>
-                                    <button onClick={() => handleStatus(booking._id, "rejected")}>
+                                    <button onClick={()=>handleStatus(booking._id,"accepted")} className="bg-green-500 text-white px-4 py-1 rounded-lg text-sm font-semibold hover:bg-green-600 transition duration-300">Accept</button>
+                                    <button onClick={() => handleStatus(booking._id, "rejected")} className="bg-red-500 text-white px-4 py-1 rounded-lg text-sm font-semibold hover:bg-red-600 transition duration-300">
                                         Reject
                                     </button>
                                     {/*we use arrow fun because===> () => creates a new function that waits to be called and if we dont use arrow function that fun calls immediately on render*/}

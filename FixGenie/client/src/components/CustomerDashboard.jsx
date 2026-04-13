@@ -21,6 +21,18 @@ const CustomerDashboard = () => {
         fetchBookings()
     },[])
 
+    async function handleCancel(bookingId){ //status is always cancelled so need to pass it
+        const token=localStorage.getItem("token")
+        await axios.patch(`http://localhost:5000/api/bookings/${bookingId}`,{
+            status:"cancelled"
+        },{
+            headers:{
+                Authorization:`Bearer ${token}`
+            }
+        })
+        setBookings(bookings.map(b=>b._id===bookingId?{...b,status:"cancelled"}:b))
+    }
+
     return (
         <div className="min-h-screen bg-gray-50 px-10 py-10">
             
@@ -91,6 +103,14 @@ const CustomerDashboard = () => {
                 `}>
                     {booking.status}
                 </div>
+                {booking.status === "pending" && (
+                <button
+                    onClick={() => handleCancel(booking._id)}
+                    className="bg-red-500 text-white px-4 py-1 rounded-lg text-sm font-semibold hover:bg-red-600 transition duration-300"
+                >
+                    Cancel
+                </button>
+            )}
             </div>
         ))
     )}
