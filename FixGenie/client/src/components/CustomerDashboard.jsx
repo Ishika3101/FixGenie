@@ -7,6 +7,28 @@ const CustomerDashboard = () => {
     const { user } = useAuth()
     const navigate = useNavigate()
 
+    const[reviewingId,setReviewingId]=useState(null) //stores which bookingId is being reviewed if null=no review form open
+    const[rating,setRating]=useState(5)
+    const[comment,setComment]=useState("")
+    const [reviewedBookings, setReviewedBookings] = useState([])
+
+    async function handleReview(bookingId, providerId) {
+    try {
+        const token = localStorage.getItem("token")
+        await axios.post("http://localhost:5000/api/reviews", {
+            bookingId, providerId, rating, comment
+        }, {
+            headers: { Authorization: `Bearer ${token}` }
+        })
+        setReviewingId(null) //closes form
+        setRating(5)
+        setComment("")
+        setReviewedBookings(prev => [...prev, bookingId])
+    } catch (error) {
+        alert(error.response?.data?.message || "Something went wrong") // shows "Already reviewed this booking"
+    }
+}
+
     const[bookings,setBookings]=useState([])
     useEffect(()=>{
         async function fetchBookings(){
@@ -110,11 +132,69 @@ const CustomerDashboard = () => {
                 >
                     Cancel
                 </button>
-            )}
-            </div>
-        ))
-    )}
-</div>
+                )}
+                {/* Leave Review button - only for completed bookings */}
+                {booking.status === "completed" && (
+                    <div className="mt-3">
+                        {reviewedBookings.includes(booking._id) ? (
+                          <span className="text-green-600 text-sm font-semibold">✅ Review Submitted</span>
+                        ):reviewingId === booking._id ? ( // User clicks "Leave Review" on booking abc123: onClick={() => setReviewingId("abc123") // reviewingId = "abc123"
+                            // Show form
+                            <div className="bg-gray-50 rounded-xl p-4 mt-2">
+                                <p className="font-semibold text-purple-950 mb-3">Leave a Review</p>             
+                                {/* Star Rating */}
+                                <div className="flex gap-2 mb-3">
+                                    {[1, 2, 3, 4, 5].map((star) => (
+                                        <button
+                                            key={star}
+                                            onClick={() => setRating(star)}
+                                            className={`text-2xl ${rating >= star ? "text-yellow-400" : "text-gray-300"}`}
+                                        >
+                                            ★
+                                        </button>
+                                    ))}
+                                </div>
+
+                                {/* Comment */}
+                                <textarea
+                                    placeholder="Share your experience..."
+                                    value={comment}
+                                    onChange={(e) => setComment(e.target.value)}
+                                    rows={2}
+                                    className="w-full border border-gray-200 rounded-xl px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 resize-none mb-3"
+                                />
+
+                                {/* Buttons */}
+                                <div className="flex gap-2">
+                                    <button
+                                        onClick={() => handleReview(booking._id, booking.providerId?._id)} //booking.providerId was populated by backend, so it's a full object {name, city, _id...}. We need just the _id to send to the review API! The ?. is optional chaining — safe in case providerId is somehow null.
+                                        className="bg-purple-950 text-white px-4 py-2 rounded-xl text-sm font-semibold hover:bg-purple-800 transition"
+                                    >
+                                        Submit Review
+                                    </button>
+                                    <button
+                                        onClick={() => setReviewingId(null)} // Sets reviewingId back to null → form disappears, button reappears!
+                                        className="bg-gray-200 text-gray-700 px-4 py-2 rounded-xl text-sm font-semibold hover:bg-gray-300 transition"
+                                    >
+                                        Cancel
+                                    </button>
+                                </div>
+                            </div>
+                        ) : (
+                            // Show button
+                            <button
+                                onClick={() => setReviewingId(booking._id)}
+                                className="bg-yellow-400 text-purple-950 px-4 py-2 rounded-xl text-sm font-semibold hover:bg-yellow-300 transition"
+                            >
+                                ⭐ Leave Review
+                            </button>
+                        )}
+                    </div>
+                            )}
+                            </div>
+                        ))
+                    )}
+                </div>
 
         </div>
     )

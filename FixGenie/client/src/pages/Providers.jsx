@@ -90,7 +90,19 @@ const Providers = () => {
                             </div>
 
                             <p className="text-gray-500 text-sm mb-1"> {provider.city}</p>
-                            <p className="text-gray-500 text-sm mb-4"> {provider.averageRating} rating</p>
+                            <div className="flex items-center gap-1 mb-4">
+    {[1, 2, 3, 4, 5].map((star) => (
+        <span
+            key={star}
+            className={`text-lg ${provider.averageRating >= star ? "text-yellow-400" : "text-gray-300"}`}
+        >
+            ★
+        </span>
+    ))}
+    <span className="text-gray-500 text-sm ml-1">
+        ({provider.averageRating || "No reviews yet"})
+    </span>
+</div>
                             
                             {provider.bio && (
                                 <p className="text-gray-600 text-sm mb-4 line-clamp-2">{provider.bio}</p>
