@@ -8,6 +8,7 @@ import Dashboard from "./pages/Dashboard.jsx"
 import Providers from "./pages/Providers.jsx"
 import BookingForm from "./pages/BookingForm.jsx"
 import Profile from "./pages/Profile.jsx"
+import OAuthSuccess from "./pages/OAuthSuccess.jsx"
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
         <Route path="/" element={<Home />} /> {/*element doesn't need component itself it needs jsx Home is just a function, <Home /> actually calls that function and renders it. */}
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/oauth-success" element={<OAuthSuccess />} />
         {/* Protected routes go here */}
         <Route path="/dashboard" element={
           <ProtectedRoute>

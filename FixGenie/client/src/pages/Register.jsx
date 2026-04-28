@@ -9,6 +9,7 @@ const Register = () => {
     const[email,setEmail]=useState("")
     const[password,setPassword]=useState("")
     const[role,setRole]=useState("customer")
+    const[error,setError]=useState("")
 
     const {user,login}=useAuth()
     const navigate=useNavigate()
@@ -26,7 +27,7 @@ const Register = () => {
             login(res.data.user,res.data.token)
             navigate("/")
         }catch(err){
-            console.log(err.response.data.message)
+          setError(err.response?.data?.message || "Something went wrong")
         }
     }
   return (
@@ -100,6 +101,9 @@ md:flex  →  display: flex  (but show as flex on medium+ screens)*/}
                 <option value="customer">Customer</option>
                 <option value="provider">Provider</option>
             </select>
+            {error && (
+                <p className="text-red-500 text-sm text-center">{error}</p>
+            )}
             <button
               type="submit"
               className="bg-purple-950 text-white font-semibold py-3 rounded-xl hover:bg-purple-800 hover:scale-[1.02] transition duration-300 shadow-md"
@@ -107,6 +111,22 @@ md:flex  →  display: flex  (but show as flex on medium+ screens)*/}
               Register
             </button>
           </form>
+
+          {/* Divider */}
+          <div className="flex items-center gap-3 my-4">
+              <hr className="flex-1 border-gray-200" />
+              <span className="text-gray-400 text-sm">or</span>
+              <hr className="flex-1 border-gray-200" />
+          </div>
+
+          {/* Google OAuth Button */}
+          <button
+              onClick={() => window.location.href = "http://localhost:5000/auth/google"}
+              className="w-full flex items-center justify-center gap-3 border border-gray-200 rounded-xl py-3 hover:bg-gray-50 transition font-semibold text-gray-700"
+          >
+              <img src="https://www.google.com/favicon.ico" className="w-5 h-5" />
+              Continue with Google
+          </button>
 
           <p className="text-gray-500 text-center mt-6">
             Already a user?{" "}

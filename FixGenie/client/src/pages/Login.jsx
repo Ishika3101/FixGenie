@@ -96,6 +96,26 @@ md:flex  →  display: flex  (but show as flex on medium+ screens)*/}
             </button>
           </form>
 
+          {/* Divider */}
+          <div className="flex items-center gap-3 my-4">
+              <hr className="flex-1 border-gray-200" />
+              <span className="text-gray-400 text-sm">or</span>
+              <hr className="flex-1 border-gray-200" />
+          </div>
+
+          {/* Google OAuth Button */}
+          <button
+              onClick={() => window.location.href = "http://localhost:5000/auth/google"} //window.location.href = changes the browser URL
+              className="w-full flex items-center justify-center gap-3 border border-gray-200 rounded-xl py-3 hover:bg-gray-50 transition font-semibold text-gray-700"
+          >
+              <img src="https://www.google.com/favicon.ico" className="w-5 h-5" />
+              Continue with Google
+          </button>
+          {/*Why not axios.get like we normally do?
+          axios.get → stays on same page, gets JSON back ❌
+
+window.location.href → actually NAVIGATES browser to that URL ✅ */}
+
           <p className="text-sm text-right mt-2 text-gray-400 hover:text-purple-600 cursor-pointer">
             Forgot password?
           </p>
