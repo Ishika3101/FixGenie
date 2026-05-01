@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios"
 import {useAuth} from "../context/AuthContext.jsx"
@@ -8,9 +8,15 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const {login}=useAuth()
+  const {login,user}=useAuth()
   const navigate=useNavigate()
 
+  //if already logged in, redirect to home
+  useEffect(() => {
+    if (user) {
+      navigate("/")
+    }
+  }, [user])
   async function handleSubmit(e) {
     e.preventDefault();
     try{

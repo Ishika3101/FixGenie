@@ -8,7 +8,13 @@ const Providers = () => {
     const [providers, setProviders] = useState([])
     const [searched, setSearched] = useState(false)
     // false = user hasn't searched yet
+    const [recommendations, setRecommendations] = useState([])
+    const [recLoading, setRecLoading] = useState(false)
     const navigate = useNavigate()
+    //recommendations = [] → stores AI recommended providers list
+
+// recLoading = false   → true while AI is thinking
+//                        shows "Finding recommendations..." text
 
     async function handleSearch() {
         const res = await axios.get(

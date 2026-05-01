@@ -5,6 +5,8 @@ import axios from 'axios'
 const ProviderDashboard = () => {
     const { user } = useAuth()
     const [bookings, setBookings] = useState([])
+    const [reviews,setReviews]=useState([])
+    const [sentiments,setSentiments]=useState({})
 
     useEffect(() => {
         async function fetchBookings() {
@@ -16,7 +18,25 @@ const ProviderDashboard = () => {
             })
             setBookings(res.data)
         }
+        async function fetchReviews() {
+            const token = localStorage.getItem("token")
+            const res = await axios.get("http://localhost:5000/api/reviews/provider", {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            })
+            setReviews(res.data)
+
+            //analyze sentiment for each review
+            const sentimentResults={}
+            for (const review of res.data){
+                const sentiment = await analyzeSentiment(review.comment)
+                sentimentResults[review._id] = sentiment
+            }
+            setSentiments(sentimentResults)
+        }
         fetchBookings()
+        fetchReviews()
     }, [])
 
     async function handleStatus(bookingId,status){
@@ -33,6 +53,32 @@ const ProviderDashboard = () => {
         setBookings(bookings.map(b=>b._id===bookingId?{...b,status}:b)) //loop through booking then check if its the one we just updated if yes spread all existing fields but override status with new one 
         //Why we used map function here ===>directly update the ONE booking in state,No extra API call! and Instant UI update! 
     }
+
+    async function analyzeSentiment(reviewText) {
+    try {
+        const response = await fetch(
+            `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${import.meta.env.VITE_GEMINI_API_KEY}`,
+            {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    contents: [{
+                        parts: [{
+                            text: `Analyze the sentiment of this review and reply with ONLY one word - either "Positive", "Negative", or "Neutral". Nothing else, just one word.
+                            
+                            Review: "${reviewText}"`
+                        }]
+                    }]
+                })
+            }
+        )
+        const data = await response.json()
+        const result = data.candidates[0].content.parts[0].text.trim()
+        return result
+    } catch (err) {
+        return "Neutral"  // default if API fails
+    }
+}
 
     return (
         <div className="min-h-screen bg-gray-50 px-10 py-10">
@@ -103,7 +149,64 @@ const ProviderDashboard = () => {
                 )}
             </div>
 
+            {/* Reviews Section */}
+            <div className="bg-white rounded-2xl p-8 shadow-sm border border-gray-100 mt-8">
+                <h2 className="text-xl font-bold text-purple-950 mb-6">
+                    Customer Reviews
+                </h2>
+
+                {reviews.length === 0 ? (
+                    <p className="text-gray-400">No reviews yet.</p>
+                ) : (
+                    reviews.map((review) => (
+                        <div key={review._id} className="p-4 border border-gray-100 rounded-xl mb-4 hover:shadow-sm transition">
+                            
+                            {/* Star Rating */}
+                            {/*this star rating is span tag that means just to see rating*/}
+                            <div className="flex items-center gap-1 mb-2">
+                                {[1, 2, 3, 4, 5].map((star) => (
+                                    <span
+                                        key={star}
+                                        className={`text-lg ${review.rating >= star ? "text-yellow-400" : "text-gray-300"}`}
+                                    >
+                                        ★
+                                    </span>
+                                ))}
+                            </div>
+
+                            {/* Comment */}
+                            <p className="text-gray-700 text-sm mb-2">{review.comment}</p>
+
+                            {/* Customer Name */}
+                            <p className="text-gray-400 text-xs mb-3">
+                                — {review.customerId?.name || "Anonymous"}
+                            </p>
+
+                            {/* Sentiment Tag */}
+                            {sentiments[review._id] ? (
+                                <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
+                                    sentiments[review._id] === "Positive"
+                                        ? "bg-green-100 text-green-700" //this controls color
+                                        : sentiments[review._id] === "Negative"
+                                        ? "bg-red-100 text-red-700"
+                                        : "bg-yellow-100 text-yellow-700"
+                                }`}>
+                                    {sentiments[review._id] === "Positive" ? "😊 Positive"  //this controls text
+                                    : sentiments[review._id] === "Negative" ? "😟 Negative" 
+                                    : "😐 Neutral"}
+                                </span>
+                            ) : (
+                                <span className="px-3 py-1 rounded-full text-xs font-semibold bg-gray-100 text-gray-400">
+                                    Analyzing...
+                                </span>
+                            )}
+                        </div>
+                    ))
+                )}
+            </div>
         </div>
+
+        
     )
 }
 

@@ -9,6 +9,7 @@ import Providers from "./pages/Providers.jsx"
 import BookingForm from "./pages/BookingForm.jsx"
 import Profile from "./pages/Profile.jsx"
 import OAuthSuccess from "./pages/OAuthSuccess.jsx"
+import ChatBot from "./components/ChatBot.jsx"
 
 function App() {
   return (
@@ -37,6 +38,7 @@ function App() {
         </ProtectedRoute>
         } />
       </Routes>
+      <ChatBot />  
     </div>
   )
 }
